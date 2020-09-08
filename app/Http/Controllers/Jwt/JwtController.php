@@ -59,6 +59,7 @@ class JwtController {
 
         $payload = [
             'exp' => time() + $addTime,
+            'iat' => time(),
             'sub' => $encryptObj->$primaryKey
         ];
 
