@@ -13,12 +13,22 @@ use Illuminate\Http\Request;
 class TestController extends Controller {
 
 
-    public function login(Request $request) {
+    public function generate(Request $request) {
         $userInfo = User::where('id',83)->first();
 
         $jwt = new JwtController();
 
         return $jwt->encrypt($userInfo);
+    }
+
+    public function verifica(Request $request) {
+        $token = $request->get('token');
+
+        $jwt = new JwtController();
+
+        $info = $jwt->decrypt($token);
+
+        return $info;
     }
 
 
