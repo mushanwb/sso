@@ -42,7 +42,7 @@ class User extends Authenticatable implements Jwt
      * 通过主键查找用户信息
      * @return mixed
      */
-    public function primaryKey()
+    public static function primaryKey()
     {
         // TODO: Implement primaryKey() method.
         return 'id';
@@ -52,9 +52,10 @@ class User extends Authenticatable implements Jwt
      * token 到期时间(单位：小时）
      * @return mixed
      */
-    public function tokenExpire()
+    public static function tokenExpire()
     {
         // TODO: Implement tokenExpire() method.
         return 1;
     }
+    
 }

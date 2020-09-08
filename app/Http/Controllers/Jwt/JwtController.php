@@ -4,10 +4,22 @@
 namespace App\Http\Controllers\Jwt;
 
 
+use App\User;
+
 class JwtController {
 
     // 签名认证算法
     private $alg = "sha1";
+    private $jwtToken;
+
+    /**
+     * JwtController constructor.
+     * @param $jwtToken
+     */
+    public function __construct() {
+        $this->jwtToken = env("JWT_TOKEN");
+    }
+
 
     /**
      * 加密对象需要实现 Jwt 接口
@@ -24,7 +36,7 @@ class JwtController {
 
         // 简单的拼接，如果要复杂的话，可以带上符号等等，
         // 另外 JWT_TOKEN 需要复杂一点，不然容易被暴力破解，建议 32 位,用 hash 函数
-        $signatures = sha1($header . "+" . $payload . "+" . env("JWT_TOKEN"));
+        $signatures = sha1($header . "+" . $payload . "+" . $this->jwtToken);
         $token = $header . "." . $payload . "." . $signatures;
 
         return $token;
@@ -54,8 +66,8 @@ class JwtController {
      */
     private function payload(Jwt $encryptObj) {
 
-        $addTime = $encryptObj->tokenExpire() * 60 * 60;
-        $primaryKey = $encryptObj->primaryKey();
+        $addTime = $encryptObj::tokenExpire() * 60 * 60;
+        $primaryKey = $encryptObj::primaryKey();
 
         $payload = [
             'exp' => time() + $addTime,
@@ -64,6 +76,41 @@ class JwtController {
         ];
 
         return base64_encode(json_encode($payload));
+    }
+
+    /**
+     * 解密，验证 token 是否被篡改，
+     * 没有的话，则验证通过查询用户信息
+     * @param $token
+     * @return bool
+     */
+    public function decrypt($token) {
+
+        $data = explode('.' , $token);
+
+        if (count($data) != 3) {
+            return false;
+        }
+
+        $sign = sha1($data[0] . "+" . $data[1] . "+" . $this->jwtToken);
+        $signatures = $data[2];
+
+        // 签名验证不通过
+        if ($sign != $signatures) {
+            return false;
+        }
+
+        $payload = json_decode(base64_decode($data[1]), true);
+
+        // 已过期
+        if (time() > $payload['exp']) {
+            return false;
+        }
+
+        // 通过模型查询用户信息，这里的 User 模型是写死的，
+        // 可以在 payload 里面添加签发人，指定查询模型
+        $info = User::where(User::primaryKey(), $payload['sub'])->first();
+        return $info;
     }
 
 }

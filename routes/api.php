@@ -19,4 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::get('test/login','Test\TestController@login');
+Route::get('test/generate','Test\TestController@generate');
+
+Route::get('test/verifica','Test\TestController@verifica');
