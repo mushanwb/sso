@@ -2,11 +2,12 @@
 
 namespace App;
 
+use App\Http\Controllers\Jwt\Jwt;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements Jwt
 {
     use Notifiable;
 
@@ -36,4 +37,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * 通过主键查找用户信息
+     * @return mixed
+     */
+    public function primaryKey()
+    {
+        // TODO: Implement primaryKey() method.
+        return 'id';
+    }
+
+    /**
+     * token 到期时间(单位：小时）
+     * @return mixed
+     */
+    public function tokenExpire()
+    {
+        // TODO: Implement tokenExpire() method.
+        return 1;
+    }
 }
