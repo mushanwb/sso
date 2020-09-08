@@ -16,6 +16,7 @@ class JwtController {
      * signatures 主要是对前两部分 以及服务端的 key 进行签名认证，防止数据被篡改
      * @param Jwt $encryptObj
      * @return string
+     * @param Jwt $encryptObj
      */
     public function encrypt(Jwt $encryptObj) {
         $header = $this->header();
@@ -33,6 +34,7 @@ class JwtController {
     /**
      * token 的头部，无重要信息，主要是标识加密的函数
      * 采用 base64 进行编码
+     * token 的头部，采用 base64 进行编码
      * @return string
      */
     private function header() {
