@@ -18,7 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// 微信公众号入口
+Route::any('/wechat/entrance','Wechat\WechatApiController@entrance');
 
+// 测试
 Route::get('test/generate','Test\TestController@generate');
-
 Route::get('test/verifica','Test\TestController@verifica');
