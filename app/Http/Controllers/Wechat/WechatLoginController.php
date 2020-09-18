@@ -11,9 +11,6 @@ class WechatLoginController extends Controller {
 
     public function wechatLogin(Request $request) {
 
-        
-
-
 
     }
 
