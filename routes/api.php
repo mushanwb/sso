@@ -24,3 +24,7 @@ Route::any('/wechat/entrance','Wechat\WechatApiController@entrance');
 // 测试
 Route::get('test/generate','Test\TestController@generate');
 Route::get('test/verifica','Test\TestController@verifica');
+
+Route::Group(['middleware' => ['jwt.login']], function () {
+    Route::get('test/user_info','Test\TestController@userInfoNeedLogin');
+});
