@@ -17,7 +17,7 @@ class WechatLoginController extends Controller {
     public function __construct()
     {
         $this->config = config('wechat.official_account');
-        $this->_appNotify = Factory::officialAccount($this->config);
+        $this->_appNotify = app('wechat.official_account');
     }
 
 
@@ -27,10 +27,11 @@ class WechatLoginController extends Controller {
         Log::info('重定向的url：' . $url);
 
         $url = '?url=' . urlencode($url);
-        $this->config['default']['oauth']['callback'] .= $url;
 
-        return $this->_appNotify->oauth
-            ->scopes(['snsapi_userinfo'])
+        $this->config['default']['oauth']['callback'] .= $url;
+        $app = Factory::officialAccount($this->config);
+
+        return $app->oauth->scopes(['snsapi_userinfo'])
             ->redirect();
     }
 
