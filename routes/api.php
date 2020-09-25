@@ -21,7 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // 微信公众号入口
 Route::any('/wechat/entrance','Wechat\WechatApiController@entrance');
 // 微信授权和回调
-Route::any('/wechat/wechatOauth','Wechat\WechatLoginController@wechatAuth');
+Route::any('/wechat/wechatAuth','Wechat\WechatLoginController@wechatAuth');
 Route::any('/wechat/callback','Wechat\WechatLoginController@callback');
 
 // 测试
