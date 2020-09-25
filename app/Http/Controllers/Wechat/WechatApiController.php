@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Wechat;
 
 
 use App\Http\Controllers\Controller;
+use EasyWeChat\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -13,7 +14,7 @@ class WechatApiController extends Controller {
     protected $_appNotify;
     public function __construct()
     {
-        $this->_appNotify = app('wechat.official_account');
+        $this->_appNotify = Factory::officialAccount(config('wechat.official_account.default'));
     }
 
     //公众号事件入口
