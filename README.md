@@ -22,8 +22,32 @@
 
 - 账号密码登录
 
+- 关注公众号登录
+
 - 微信公众号登录
 
 - 微信小程序登录
 
+#### 微信公众号登录
+
+依赖工具:
+```
+# Laravel < 5.8
+composer require "overtrue/laravel-wechat:~4.0"
+
+# Laravel >= 5.8
+composer require "overtrue/laravel-wechat:~5.0"
+```
+
+授权接口:
+```
+api/wechat/wechatAuth
+```
+授权流程:
+
+> 当用户访问一个需要授权页面时，如 baidu.com
+> 前端需要调用该授权接口进行授权，授权完后微信会调用回调接口
+> 在回调接口里面保存用户信息，并且重定向到用户要访问的页面：baidu.com
+> 当获取到用户的信息后，需要生成 token，并且将生成的 token 拼接到重定向的 url 后
+> 重定向到前端的页面后，前端需要将 url 上的 token 截取下来，放入 header 中，而不应该再放在 url 中
 
