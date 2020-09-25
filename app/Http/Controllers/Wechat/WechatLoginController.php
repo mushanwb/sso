@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Wechat;
 
 
 use App\Http\Controllers\Controller;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use EasyWeChat\Factory;
@@ -16,7 +15,7 @@ class WechatLoginController extends Controller {
     protected $config;
     public function __construct()
     {
-        $this->config = config('wechat.official_account');
+        $this->config = config('wechat.official_account.default');
         $this->_appNotify = app('wechat.official_account');
     }
 
@@ -28,7 +27,7 @@ class WechatLoginController extends Controller {
 
         $url = '?url=' . urlencode($url);
 
-        $this->config['default']['oauth']['callback'] .= $url;
+        $this->config['oauth']['callback'] .= $url;
         $app = Factory::officialAccount($this->config);
 
         return $app->oauth->scopes(['snsapi_userinfo'])
