@@ -16,7 +16,7 @@ class WechatLoginController extends Controller {
     public function __construct()
     {
         $this->config = config('wechat.official_account.default');
-        $this->_appNotify = app('wechat.official_account');
+        $this->_appNotify = Factory::officialAccount($this->config);
     }
 
 
