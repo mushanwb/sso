@@ -44,6 +44,9 @@ password_verify('123456', $hash)
 ```
 # 加密
 $hash = bcrypt('123456');
+## 或者
+$hash = Hash::make('123456');
+
 
 # 验证
 Hash::check('123456', $hash);
