@@ -28,6 +28,35 @@
 
 - 微信小程序登录
 
+### 账号密码登录
+
+依赖函数: password_hash  password_verify
+```
+# 加密
+$hash = password_hash('123456', PASSWORD_BCRYPT);
+
+# 验证
+password_verify('123456', $hash)
+```
+这两个函数在 laravel 中被封装成: 
+```
+# 加密
+$hash = bcrypt('123456');
+
+# 验证
+Hash::check('123456', $hash);
+``` 
+
+登录接口:
+```
+api/account/login
+```
+登录流程:
+> 用户需要先通过注册接口，将密码用 bcrypt 函数进行加密，存入数据库   
+> 在用户登录的时候，通过用户输入的账号，拿到数据库中的密文密码   
+> 在通过 Hash::check 验证用户输入的明文密码和数据库中的密文密码是否匹配   
+> 如果验证通过，则将用户的信息生成 token 输出
+
 ### 微信公众号登录
 
 依赖工具: easywechat
@@ -44,7 +73,6 @@ composer require "overtrue/laravel-wechat:~5.0"
 api/wechat/wechatAuth
 ```
 授权流程:
-
 > 当用户访问一个需要授权页面时，如 baidu.com   
 > 前端需要调用该授权接口进行授权，授权完后微信会调用回调接口   
 > 在回调接口里面保存用户信息，并且重定向到用户要访问的页面：baidu.com   
