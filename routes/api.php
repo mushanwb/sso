@@ -26,6 +26,8 @@ Route::any('/wechat/callback','Wechat\WechatLoginController@callback');
 
 // 账号密码登录
 Route::post('account/login','Account\AccountLoginController@login');
+Route::post('account/register','Account\AccountLoginController@register');
+
 
 // 测试
 Route::get('test/generate','Test\TestController@generate');
