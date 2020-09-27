@@ -24,6 +24,9 @@ Route::any('/wechat/entrance','Wechat\WechatApiController@entrance');
 Route::any('/wechat/wechatAuth','Wechat\WechatLoginController@wechatAuth');
 Route::any('/wechat/callback','Wechat\WechatLoginController@callback');
 
+// 账号密码登录
+Route::post('account/login','Account\AccountLoginController@login');
+
 // 测试
 Route::get('test/generate','Test\TestController@generate');
 Route::get('test/verifica','Test\TestController@verifica');
