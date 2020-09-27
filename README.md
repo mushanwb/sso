@@ -16,7 +16,9 @@
 
 
 根据 JWT 的原理（签名认证算法），制作了一个简单的签名认证，方便理解 JWT 原理，生产环境还是
-用 JWT 包较为合适。 
+用 JWT 官方包较为合适。   
+[JWT Laravel版本 Github源码](https://github.com/tymondesigns/jwt-auth)   
+[JWT Laravle版本 Composer文档](https://packagist.org/packages/tymon/jwt-auth)  
 
 ### 登录
 
