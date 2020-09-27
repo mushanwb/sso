@@ -9,7 +9,7 @@ use App\User;
 class JwtController {
 
     // 签名认证算法
-    private $alg = "sha1";
+    private $alg = "sha256";
     private $jwtToken;
 
     /**
@@ -36,7 +36,7 @@ class JwtController {
 
         // 简单的拼接，如果要复杂的话，可以带上符号等等，
         // 另外 JWT_TOKEN 需要复杂一点，不然容易被暴力破解，建议 32 位,用 hash 函数
-        $signatures = sha1($header . "+" . $payload . "+" . $this->jwtToken);
+        $signatures = hash($this->alg, ($header . "+" . $payload . "+" . $this->jwtToken));
         $token = $header . "." . $payload . "." . $signatures;
 
         return $token;
@@ -92,7 +92,7 @@ class JwtController {
             return false;
         }
 
-        $sign = sha1($data[0] . "+" . $data[1] . "+" . $this->jwtToken);
+        $sign = hash($this->alg, ($data[0] . "+" . $data[1] . "+" . $this->jwtToken));
         $signatures = $data[2];
 
         // 签名验证不通过
