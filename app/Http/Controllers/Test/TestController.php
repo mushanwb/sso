@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Test;
 
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Jwt\Jwt;
 use App\Http\Controllers\Jwt\JwtController;
 use App\User;
 use Illuminate\Http\Request;
@@ -25,9 +24,7 @@ class TestController extends Controller {
             return response()->json(['code' => 201, 'msg' => '用户信息不存在', 'data' => []]);
         }
 
-        $jwt = new JwtController();
-
-        $data['token'] = $jwt->encrypt($userInfo);
+        $data['token'] = JwtController::encrypt($userInfo);
 
         return response()->json(['code' => 200, 'msg' => 'success', 'data' => $data]);
     }
@@ -41,9 +38,7 @@ class TestController extends Controller {
 
         $token = $request->header('token');
 
-        $jwt = new JwtController();
-
-        $info = $jwt->decrypt($token);
+        $info = JwtController::decrypt($token);
 
         if (!$info) {
             return response()->json(['code' => 201, 'msg' => '验证失败，token 信息错误', 'data' => []]);

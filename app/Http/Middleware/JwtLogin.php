@@ -13,9 +13,7 @@ class JwtLogin {
 
         $token = $request->header('token');
 
-        $jwt = new JwtController();
-
-        $info = $jwt->decrypt($token);
+        $info = JwtController::decrypt($token);
 
         if (!$info) {
             return response()->json(['code' => 201, 'msg' => '验证失败，token 信息错误', 'data' => []]);
