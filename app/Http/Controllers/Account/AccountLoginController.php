@@ -70,8 +70,7 @@ class AccountLoginController extends Controller {
             return response()->json(['code' => 201, 'msg' => '账号或密码错误', 'data' => []]);
         }
 
-        $jwt = new JwtController();
-        $data['token'] = $jwt->encrypt($userInfo);
+        $data['token'] = JwtController::encrypt($userInfo);
         return response()->json(['code' => 200, 'msg' => '登录成功', 'data' => $data]);
     }
 

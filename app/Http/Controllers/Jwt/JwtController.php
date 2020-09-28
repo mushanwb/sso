@@ -9,15 +9,15 @@ use App\User;
 class JwtController {
 
     // 签名认证算法
-    private $alg = "sha256";
-    private $jwtToken;
+    private static $alg = "sha256";
+    private static $jwtToken;
 
     /**
      * JwtController constructor.
      * @param $jwtToken
      */
     public function __construct() {
-        $this->jwtToken = env("JWT_TOKEN");
+        self::$jwtToken = env("JWT_TOKEN");
     }
 
 
@@ -30,13 +30,14 @@ class JwtController {
      * @return string
      * @param Jwt $encryptObj
      */
-    public function encrypt(Jwt $encryptObj) {
-        $header = $this->header();
-        $payload = $this->payload($encryptObj);
+    public static function encrypt(Jwt $encryptObj) {
+        $header = self::header();
+        $payload = self::payload($encryptObj);
 
-        // 简单的拼接，如果要复杂的话，可以带上符号等等，
+        // 简单的拼接，如果要复杂的话，可以带上符号或者加盐等等。
         // 另外 JWT_TOKEN 需要复杂一点，不然容易被暴力破解，建议 32 位,用 hash 函数
-        $signatures = hash($this->alg, ($header . "+" . $payload . "+" . $this->jwtToken));
+        $str = $header . "+" . $payload . "+" . self::$jwtToken;
+        $signatures = hash(self::$alg, $str);
         $token = $header . "." . $payload . "." . $signatures;
 
         return $token;
@@ -49,9 +50,9 @@ class JwtController {
      * token 的头部，采用 base64 进行编码
      * @return string
      */
-    private function header() {
+    private static function header() {
         $header = [
-            'alg' => $this->alg,
+            'alg' => self::$alg,
             'type' => 'JWT'
         ];
 
@@ -64,7 +65,7 @@ class JwtController {
      * @param Jwt $encryptObj
      * @return string
      */
-    private function payload(Jwt $encryptObj) {
+    private static function payload(Jwt $encryptObj) {
 
         $addTime = $encryptObj::tokenExpire() * 60 * 60;
         $primaryKey = $encryptObj::primaryKey();
@@ -84,7 +85,7 @@ class JwtController {
      * @param $token
      * @return bool
      */
-    public function decrypt($token) {
+    public static function decrypt($token) {
 
         $data = explode('.' , $token);
 
@@ -92,15 +93,19 @@ class JwtController {
             return false;
         }
 
-        $sign = hash($this->alg, ($data[0] . "+" . $data[1] . "+" . $this->jwtToken));
+        $header = $data[0];
+        $payload = $data[1];
         $signatures = $data[2];
+        $str = $header . "+" . $payload . "+" . self::$jwtToken;
+
+        $sign = hash(self::$alg, $str);
 
         // 签名验证不通过
         if ($sign != $signatures) {
             return false;
         }
 
-        $payload = json_decode(base64_decode($data[1]), true);
+        $payload = json_decode(base64_decode($payload), true);
 
         // 已过期
         if (time() > $payload['exp']) {
