@@ -52,6 +52,8 @@ $hash = Hash::make('123456');
 Hash::check('123456', $hash);
 ``` 
 
+PHP 中这两个函数的加密和验证过程，可以参考这个文章：[浅谈密码验证](https://github.com/mushanwb/casual_write/issues/19)
+
 登录接口:
 ```
 api/account/login
