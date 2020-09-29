@@ -7,12 +7,12 @@
 
 ### 同一台服务器
 
-对于同一台服务器的不同网站，可以使用 session 或者 redis 存储信息机制，不同网站访问
-同一个 session 或者 redis ，获取信息并验证。
+对于同一台服务器的不同网站，可以使用 Session 或者 Redis 存储信息机制，不同网站访问
+同一个 Session 或者 Redis ，获取信息并验证。
 
 ### 不同服务器
 
-不同服务器也可以通过 session 共享或者 redis 共享机制去验证，但使用 JWT 是一个很不错的选择。
+不同服务器也可以通过 Session 共享或者 Redis 共享机制去验证，但使用 JWT 是一个很不错的选择。
 
 
 根据 JWT 的原理（签名认证算法），制作了一个简单的签名认证，方便理解 JWT 原理，生产环境还是
@@ -40,7 +40,7 @@ $hash = password_hash('123456', PASSWORD_BCRYPT);
 # 验证
 password_verify('123456', $hash)
 ```
-这两个函数在 laravel 中被封装成: 
+这两个函数在 Laravel 中被封装成: 
 ```
 # 加密
 $hash = bcrypt('123456');
@@ -66,7 +66,7 @@ api/account/login
 
 ### 微信公众号登录
 
-依赖工具: easywechat
+依赖工具: EasyWeChat
 ```
 # Laravel < 5.8
 composer require "overtrue/laravel-wechat:~4.0"
