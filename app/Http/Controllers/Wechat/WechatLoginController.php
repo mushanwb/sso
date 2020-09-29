@@ -82,7 +82,7 @@ class WechatLoginController extends Controller {
             $userInfo = User::where('openid',$wechatUserInfo['openid'])->first();
             // 如果用户已经存在，则返回 token 直接登录
             if ($userInfo) {
-                return redirect()->to($targetUrl . 'Bearer'. JwtController::encrypt($userInfo));
+                return redirect()->to($targetUrl . JwtController::encrypt($userInfo));
             }
 
             // 没有则添加用户信息
@@ -96,7 +96,7 @@ class WechatLoginController extends Controller {
 
             $id = User::insertGetId($save);
             $userInfo = User::where('id',$id)->first();
-            return redirect()->to($targetUrl . 'Bearer'. JwtController::encrypt($userInfo));
+            return redirect()->to($targetUrl . JwtController::encrypt($userInfo));
         } catch (\Exception $e) {
             Log::error('用户授权出错：' . $e->getMessage());
             return redirect()->to($targetUrl);

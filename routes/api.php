@@ -20,9 +20,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // 微信公众号入口
 Route::any('/wechat/entrance','Wechat\WechatApiController@entrance');
+
 // 微信授权和回调
-Route::any('/wechat/wechatAuth','Wechat\WechatLoginController@wechatAuth'); // 微信授权
+Route::any('/wechat/wechatAuth','Wechat\WechatLoginController@wechatAuth'); // 公众号授权
 Route::any('/wechat/callback','Wechat\WechatLoginController@callback'); // 微信授权回调
+
+Route::any('/mini/auth','MiniPrograms\MiniProgramLoginController@auth'); // 小程序授权
+
 
 // 账号密码登录
 Route::post('account/login','Account\AccountLoginController@login');    // 账号登录
