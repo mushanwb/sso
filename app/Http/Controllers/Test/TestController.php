@@ -18,15 +18,15 @@ class TestController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     public function generate(Request $request) {
-        $userInfo = User::where('id',83)->first();
+        $userInfo = User::where('id',1)->first();
 
         if (!$userInfo) {
-            return response()->json(['code' => 201, 'msg' => '用户信息不存在', 'data' => []]);
+            return $this->_apiExit(40402);
         }
 
         $data['token'] = JwtController::encrypt($userInfo);
 
-        return response()->json(['code' => 200, 'msg' => 'success', 'data' => $data]);
+        return $this->_apiExit(200, $data);
     }
 
     /**
@@ -41,10 +41,10 @@ class TestController extends Controller {
         $info = JwtController::decrypt($token);
 
         if (!$info) {
-            return response()->json(['code' => 201, 'msg' => '验证失败，token 信息错误', 'data' => []]);
+            return $this->_apiExit(40101);
         }
 
-        return response()->json(['code' => 200, 'msg' => '验证成功', 'data' => $info]);
+        return $this->_apiExit(200, $info);
     }
 
     /**
@@ -69,7 +69,7 @@ class TestController extends Controller {
 
         $data['userInfo'] = $userInfo;
 
-        return response()->json(['code' => 200, 'msg' => '验证成功', 'data' => $data]);
+        return $this->_apiExit(200, $data);
 
     }
 
