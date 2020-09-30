@@ -39,14 +39,14 @@ class MiniProgramLoginController extends Controller {
 
             // 这里使用 openid 判断用户是否注册，
             // 如果小程序和公众号是同一个主题，则可以用 unionId 判断是否是同一个用户
-            $userInfo = User::where('openid',$miniProgramUserInfo['openId'])->first();
-            // 如果不用户已经存在，则添加用户信息到数据库
+            $userInfo = User::where('unionid',$miniProgramUserInfo['unionId'])->first();
+            // 如果用户不存在，则添加用户信息到数据库
             if (!$userInfo) {
 
                 $save = [
                     'nickname' => $miniProgramUserInfo['nickName'],
                     'headimgurl' => $miniProgramUserInfo['avatarUrl'],
-                    'openid' => $miniProgramUserInfo['openId'],
+                    'mini_program_openid' => $miniProgramUserInfo['openId'],
                     'unionid' => $miniProgramUserInfo['unionId'],
                     'sex' => $miniProgramUserInfo['gender'],
                     'city' => $miniProgramUserInfo['city'],
@@ -56,6 +56,10 @@ class MiniProgramLoginController extends Controller {
 
                 $id = User::insertGetId($save);
                 $userInfo = User::where('id',$id)->first();
+            } else {    // 存在的话，是否在小程序中授权过，记录小程序 openid
+                if (!$userInfo->mini_program_openid) {
+                    User::where('unionid',$miniProgramUserInfo['unionId'])->update(['mini_program_openid' => $miniProgramUserInfo['openId']]);
+                }
             }
 
             $data['token'] = JwtController::encrypt($userInfo);
