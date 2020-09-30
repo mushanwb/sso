@@ -86,3 +86,18 @@ api/wechat/wechatAuth
 > 当获取到用户的信息后，需要生成 token，并且将生成的 token 拼接到重定向的 url 后   
 > 重定向到前端的页面后，前端需要将 url 上的 token 截取下来，放入 header 中，而不应该再放在 url 中 
 
+### 微信小程序登录
+
+授权接口:
+```
+api/mini/auth
+```
+
+授权流程:
+
+> 前端会传入 3 个重要的参数，code, iv, encryptedData   
+> 首先需要通过 code 获取 session_key   
+> 将 session_key, iv, encryptedData 三个参数经行解密,得到用户信息即可
+
+注意: 公众号和小程序需要绑定开放平台才会有 unionId，并且这两个获取的 openid 是不同的，
+但是如果绑定到同一个主体上，unionId 是一样的，因此如果有必要的话，可以通过 unionId 判断是否同一个用户
