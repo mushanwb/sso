@@ -25,7 +25,7 @@ class MiniProgramLoginController extends Controller {
         $iv = $request->post('iv');
         $encryptedData = $request->post('encryptedData');
         if (empty($code) || empty($iv) || empty($encryptedData)) {
-            return response()->json(['code' => 201, 'msg' => '缺少必要参数', 'data' => []]);
+            return $this->_apiExit(40001);
         }
 
         try {
@@ -59,11 +59,11 @@ class MiniProgramLoginController extends Controller {
             }
 
             $data['token'] = JwtController::encrypt($userInfo);
-            return response()->json(['code' => 200, 'msg' => '登录成功', 'data' => $data]);
+            return $this->_apiExit(200, $data);
 
         } catch (\Exception $e) {
             Log::error('用户授权出错：' . $e->getMessage());
-            return response()->json(['code' => 201, 'msg' => "小程序授权失败", 'data' => []]);
+            return $this->_apiExit(50002);
         }
 
     }

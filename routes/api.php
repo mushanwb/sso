@@ -18,10 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// 微信公众号入口
-Route::any('/wechat/entrance','Wechat\WechatApiController@entrance');
+// 微信
+Route::any('/wechat/entrance','Wechat\WechatApiController@entrance'); // 微信公众号入口
 
-// 微信授权和回调
 Route::any('/wechat/wechatAuth','Wechat\WechatLoginController@wechatAuth'); // 公众号授权
 Route::any('/wechat/callback','Wechat\WechatLoginController@callback'); // 微信授权回调
 
@@ -33,10 +32,10 @@ Route::post('account/login','Account\AccountLoginController@login');    // 账�
 Route::post('account/register','Account\AccountLoginController@register');  // 账号注册
 
 
-// 测试
+// 测试 JWT
 Route::get('test/generate','Test\TestController@generate'); // jwt 生成
 Route::get('test/verifica','Test\TestController@verifica'); // jwt 验证
 
 Route::Group(['middleware' => ['jwt.login']], function () {
-    Route::get('test/user_info','Test\TestController@userInfoNeedLogin');   // 通过中间件认证的接口
+    Route::get('test/user_info','Test\TestController@userInfoNeedLogin');   // 测试获取用户信息
 });

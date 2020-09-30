@@ -17,7 +17,8 @@ class User extends Authenticatable implements Jwt
      * @var array
      */
     protected $fillable = [
-         'account', 'password', 'openid', 'nickname', 'headimgurl'
+         'account', 'password', 'nickname', 'headimgurl', 'sex', 'city', 'province', 'country',
+        'official_account_openid', 'mini_program_openid', 'unionid'
     ];
 
     /**
@@ -26,12 +27,12 @@ class User extends Authenticatable implements Jwt
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'official_account_openid', 'mini_program_openid', 'unionid', 'updated_at', 'deleted_at'
     ];
 
     protected $dateFormat = 'U';
 
-    /**
+    /**s
      * The attributes that should be cast to native types.
      *
      * @var array

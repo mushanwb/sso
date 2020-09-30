@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class AccountLoginController extends Controller {
 
@@ -22,14 +23,28 @@ class AccountLoginController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request) {
-        $account = $request->post('account');
-        $password = $request->post('password');
+
+        $param = $request->only(['account','password']);
+
+        $validator = Validator::make($param,  [
+            'account'       => 'required|alpha_num',
+            'password'      => 'required|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->toArray();
+            return $this->_apiExit(40002,'',key($errors) . ' 参数验证错误');
+        }
+
+        $account = $param['account'];
+        $password = $param['password'];
 
         $userInfo = User::where('account', $account)->first();
         if ($userInfo) {
-            return response()->json(['code' => 201, 'msg' => '账号已存在', 'data' => []]);
+            return $this->_apiExit(40901);
         }
 
+        // 密码加密
         $dbPassword = bcrypt($password);
 
         $data = [
@@ -39,10 +54,10 @@ class AccountLoginController extends Controller {
 
         try {
             User::create($data);
-            return response()->json(['code' => 200, 'msg' => '注册成功', 'data' => []]);
+            return $this->_apiExit(200);
         } catch (\Exception $e) {
             Log::error("账号注册失败原因:" . $e->getMessage());
-            return response()->json(['code' => 201, 'msg' => '注册失败', 'data' => []]);
+            return $this->_apiExit(50001);
         }
 
     }
@@ -61,17 +76,31 @@ class AccountLoginController extends Controller {
      */
     public function login(Request $request) {
 
-        $account = $request->post('account');
-        $password = $request->post('password');
+        $param = $request->only(['account','password']);
+
+        $validator = Validator::make($param,  [
+            'account'       => 'required|alpha_num',
+            'password'      => 'required|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->toArray();
+            return $this->_apiExit(40002,'',key($errors) . ' 参数验证错误');
+        }
+
+        $account = $param['account'];
+        $password = $param['password'];
 
         $userInfo = User::where('account', $account)->first();
 
         if (!$userInfo || !Hash::check($password, $userInfo->password)) {
-            return response()->json(['code' => 201, 'msg' => '账号或密码错误', 'data' => []]);
+            return $this->_apiExit(40401);
         }
 
+        $data['userInfo'] = $userInfo;
         $data['token'] = JwtController::encrypt($userInfo);
-        return response()->json(['code' => 200, 'msg' => '登录成功', 'data' => $data]);
+
+        return $this->_apiExit(200, $data);
     }
 
 
