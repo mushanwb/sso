@@ -78,18 +78,28 @@ class WechatLoginController extends Controller {
             $wechatUserInfo = $wechatUserInfo->original;
             Log::info('微信返回得用户信息：' . json_encode($wechatUserInfo));
 
-            // 这里使用 openid 判断用户是否注册
-            $userInfo = User::where('openid',$wechatUserInfo['openid'])->first();
+            // 这里使用 unionid 判断用户是否注册
+            $userInfo = User::where('unionid',$wechatUserInfo['unionid'])->first();
             // 如果用户已经存在，则返回 token 直接登录
             if ($userInfo) {
+                // 通过公众号 openid 判断是否在公众号中授权
+                if (!$userInfo->official_account_openid) {
+                    // 没有在公众号中授权过，记录公众号的 openid
+                    User::where('unionid',$wechatUserInfo['unionid'])->update(['official_account_openid' =>  $wechatUserInfo['openid']]);
+                }
                 return redirect()->to($targetUrl . JwtController::encrypt($userInfo));
             }
 
             // 没有则添加用户信息
             $save = [
-                'openid' => $wechatUserInfo['openid'],
+                'official_account_openid' => $wechatUserInfo['openid'],
                 'nickname' => $wechatUserInfo['nickname'],
                 'headimgurl' => $wechatUserInfo['headimgurl'],
+                'unionid' => $wechatUserInfo['unionid'],
+                'sex' => $wechatUserInfo['gender'],
+                'city' => $wechatUserInfo['city'],
+                'province' => $wechatUserInfo['province'],
+                'country' => $wechatUserInfo['country'],
                 'created_at' => time(),
                 'updated_at' => time()
             ];
