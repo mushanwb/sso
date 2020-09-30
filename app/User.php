@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Http\Controllers\Jwt\Jwt;
+use DateTimeInterface;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -32,14 +33,10 @@ class User extends Authenticatable implements Jwt
 
     protected $dateFormat = 'U';
 
-    /**s
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format($this->dateFormat);
+    }
 
     /**
      * 通过主键查找用户信息
