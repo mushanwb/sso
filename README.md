@@ -18,7 +18,7 @@
 根据 JWT 的原理（签名认证算法），制作了一个简单的签名认证，方便理解 JWT 原理，生产环境还是
 用 JWT 官方包较为合适。   
 
-> JWT 跨平台认证原理：   
+> JWT 跨服务器认证原理：   
 > JWT 使用签名给认证算法,将用户的唯一信息,比如自增 id ,以及设定过期时间等信息(统称客户端的信息),   
 > 将这些客户端的信息和服务端复杂并且唯一的私钥，一起使用散列函数进行运算,得到唯一值(签名),   
 > 然后将这些信息(客户端信息)和签名一起发送给服务端,服务通过私钥和客户端信息再次使用同样的散列函数进行运算   
@@ -26,8 +26,8 @@
 > 如果信息被篡改,则验证将不会通过。因此,用户在登录成功后,得到服务端认证成功的令牌,便可以进行登录操作      
 > 同时只需要知道服务端的私钥,和加密方法,这个令牌将可以在任何地方被解密,因此如果需要在不同服务器上验证,则只需要将私钥和加密方法设成一致即可    
 
-[JWT Laravel版本 Github源码](https://github.com/tymondesigns/jwt-auth)   
-[JWT Laravle版本 Composer文档](https://packagist.org/packages/tymon/jwt-auth)  
+[JWT Laravel版本 GitHub源码](https://github.com/tymondesigns/jwt-auth)   
+[JWT Laravel版本 Composer文档](https://packagist.org/packages/tymon/jwt-auth)  
 
 ### 登录
 
