@@ -29,6 +29,16 @@
 [JWT Laravel版本 GitHub源码](https://github.com/tymondesigns/jwt-auth)   
 [JWT Laravel版本 Composer文档](https://packagist.org/packages/tymon/jwt-auth)  
 
+### 数据库迁移
+
+在项目中，使用数据库迁移命令，将创建 users 表的信息
+> 在这个之前请在确保在 .env 文件中已经填好 mysql 连接的配置， 
+> 并且 mysql 中已经存在 .env 配置的数据库
+
+```php
+php artisan migrate
+```
+
 ### 登录
 
 - 账号密码登录
