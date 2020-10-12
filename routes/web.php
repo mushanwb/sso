@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+//生成 pc 端登录的二维码
+Route::get('/wechat/loginQrcode','Wechat\WechatApiController@makeLoginQrcode');
+

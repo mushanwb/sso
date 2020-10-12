@@ -41,7 +41,7 @@ class WechatApiController extends Controller {
 
     public function makeLoginQrcode(Request $request) {
 
-        // 生成二维码以及扫码后的事件参数，二维码过期时间为 6 分钟
+        // 通过扫码进入公众号中的事件参数，来生成二维码，这里事件参数为 qrcode_login，二维码过期时间为 6 分钟
         $result = $this->_appNotify->qrcode->temporary('qrcode_login', 10*60);
 
         $url = $this->_appNotify->qrcode->url($result['ticket']);
