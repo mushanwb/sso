@@ -53,7 +53,7 @@ class WechatScanLogin extends Controller {
 
         //用户是否注册，还是使用 unionid 来判断是否是同一个用户
 //        $userInfo = User::where('unionid',$wechatUserInfo['unionid'])->first();
-        $userInfo = User::where('openid',$wechatUserInfo['openid'])->first();
+        $userInfo = User::where('official_account_openid',$wechatUserInfo['openid'])->first();
         Log::info('用户信息：' . json_encode($userInfo));
 
         // 用户不存在，添加用该用户信息
@@ -80,7 +80,7 @@ class WechatScanLogin extends Controller {
             // 如果用户已经存在，查看用户是否有公众号的 openid
             if (!$userInfo->official_account_openid) {
                 // 没有公众号的 openid，记录公众号的 openid
-                User::where('openid',$wechatUserInfo['openid'])->update(['official_account_openid' =>  $wechatUserInfo['openid']]);
+                User::where('official_account_openid',$wechatUserInfo['openid'])->update(['official_account_openid' =>  $wechatUserInfo['openid']]);
             }
         }
 
