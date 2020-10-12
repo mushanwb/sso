@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Wechat;
 
 
 use App\Http\Controllers\Controller;
+use App\User;
 use EasyWeChat\Factory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class WechatApiController extends Controller {
@@ -25,7 +27,21 @@ class WechatApiController extends Controller {
             Log::info('入口事件信息： ', $message);
             switch ($message['MsgType']) {
                 case 'event':
-                    if ($message['Event'] == 'subscribe') {      //关注
+
+                    // 事件的 key 就是生成二维码时设定的参数
+                    // 如果用户没有关注，则在设定的参数前面加上 qrscene_
+                    // 因此该 if 判断前面表名用户已经关注过了，后面标识没有关注现在才开始关注
+                    // 对于这两种情况，用户扫码后都需要给他登录
+                    if ($message['EventKey'] == "qrcode_login" || $message['EventKey'] == "qrscene_qrcode_login") {
+                        // 用户扫码后，将用户信息放入缓存中
+                        $wechatScanLogin = new WechatScanLogin();
+                        $wechatScanLogin->scanLogin($message);
+                        $str = config('wechatmessage.login');
+                    }
+
+                    // EventKey 为 null 表名用户并不是通过扫码过来后关注的
+                    // 因此回复的文案应该不同
+                    if ($message['Event'] == 'subscribe' && $message['EventKey'] == 'null') {
                         $str = config('wechatmessage.subscribe');
                     }
                     $this->_appNotify->customer_service->message($str)->to($message['FromUserName'])->send();
@@ -39,18 +55,5 @@ class WechatApiController extends Controller {
         return $response;
     }
 
-    public function makeLoginQrcode(Request $request) {
 
-        // 通过扫码进入公众号中的事件参数，来生成二维码，这里事件参数为 qrcode_login，二维码过期时间为 6 分钟
-        $result = $this->_appNotify->qrcode->temporary('qrcode_login', 10*60);
-
-        $url = $this->_appNotify->qrcode->url($result['ticket']);
-
-        // 将用户扫码事件参数存入 session 中
-        $request->session()->put('user',$result['ticket']);
-        Log::info('session存储信息：' . json_encode($request->session()->all()));
-
-        $data['url'] = $url;
-        return $this->_apiExit(200, $data);
-    }
 }
