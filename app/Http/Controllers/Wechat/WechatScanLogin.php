@@ -54,9 +54,11 @@ class WechatScanLogin extends Controller {
         //用户是否注册，还是使用 unionid 来判断是否是同一个用户
 //        $userInfo = User::where('unionid',$wechatUserInfo['unionid'])->first();
         $userInfo = User::where('openid',$wechatUserInfo['openid'])->first();
+        Log::info('用户信息：' . json_encode($userInfo));
 
         // 用户不存在，添加用该用户信息
         if (!$userInfo) {
+            Log::info('来了');
             $save = [
                 'official_account_openid' => $wechatUserInfo['openid'],
                 'nickname' => $wechatUserInfo['nickname'],
@@ -71,8 +73,10 @@ class WechatScanLogin extends Controller {
             ];
 
             $id = User::insertGetId($save);
+            Log::info('用户id：   ' . $id);
             $userInfo = User::where('id', $id)->first();
         } else {
+            Log::info('到这来了来了');
             // 如果用户已经存在，查看用户是否有公众号的 openid
             if (!$userInfo->official_account_openid) {
                 // 没有公众号的 openid，记录公众号的 openid
@@ -82,6 +86,7 @@ class WechatScanLogin extends Controller {
 
         // 将用户信息存入缓存中，使用用户扫码的 Ticket 唯一标识做为 key，用户信息为 value，过期时间为 6 分钟
         Cache::put($message['Ticket'], $userInfo, 6*60);
+        Log::info('用户信息缓存：   ' . json_encode(Cache::get($message['Ticket'])));
     }
 
     /**
