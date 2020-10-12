@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Jwt\JwtController;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use EasyWeChat\Factory;
 
@@ -104,7 +105,7 @@ class WechatLoginController extends Controller {
                 'updated_at' => time()
             ];
 
-            $id = User::insertGetId($save);
+            $id = DB::table('users')->insertGetId($save);
             $userInfo = User::where('id',$id)->first();
             return redirect()->to($targetUrl . JwtController::encrypt($userInfo));
         } catch (\Exception $e) {

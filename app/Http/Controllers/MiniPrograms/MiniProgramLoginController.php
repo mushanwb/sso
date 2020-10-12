@@ -8,6 +8,7 @@ use App\Http\Controllers\Jwt\JwtController;
 use App\User;
 use Illuminate\Http\Request;
 use EasyWeChat\Factory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class MiniProgramLoginController extends Controller {
@@ -54,7 +55,7 @@ class MiniProgramLoginController extends Controller {
                     'country' => $miniProgramUserInfo['country']
                 ];
 
-                $id = User::insertGetId($save);
+                $id = DB::table('users')->insertGetId($save);
                 $userInfo = User::where('id',$id)->first();
             } else {    // 存在的话，是否在小程序中授权过，记录小程序 openid
                 if (!$userInfo->mini_program_openid) {

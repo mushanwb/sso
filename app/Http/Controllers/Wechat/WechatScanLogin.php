@@ -9,6 +9,7 @@ use App\User;
 use EasyWeChat\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class WechatScanLogin extends Controller {
@@ -72,7 +73,7 @@ class WechatScanLogin extends Controller {
                 'updated_at' => time()
             ];
 
-            $id = User::insertGetId($save);
+            $id = DB::table('users')->insertGetId($save);
             Log::info('用户id：   ' . $id);
             $userInfo = User::where('id', $id)->first();
         } else {
