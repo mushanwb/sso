@@ -38,4 +38,19 @@ class WechatApiController extends Controller {
         $response = $this->_appNotify->server->serve();
         return $response;
     }
+
+    public function makeLoginQrcode(Request $request) {
+
+        // 生成二维码以及扫码后的事件参数，二维码过期时间为 6 分钟
+        $result = $this->_appNotify->qrcode->temporary('qrcode_login', 10*60);
+
+        $url = $this->_appNotify->qrcode->url($result['ticket']);
+
+        // 将用户扫码事件参数存入 session 中
+        $request->session()->put('user',$result['ticket']);
+        Log::info('session存储信息：' . json_encode($request->session()->all()));
+
+        $data['url'] = $url;
+        return $this->_apiExit(200, $data);
+    }
 }
