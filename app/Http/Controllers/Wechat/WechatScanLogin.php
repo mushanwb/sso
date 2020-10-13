@@ -65,7 +65,7 @@ class WechatScanLogin extends Controller {
                 'nickname' => $wechatUserInfo['nickname'],
                 'headimgurl' => $wechatUserInfo['headimgurl'],
 //                'unionid' => $wechatUserInfo['unionid'],
-                'sex' => $wechatUserInfo['gender'],
+                'sex' => $wechatUserInfo['sex'],
                 'city' => $wechatUserInfo['city'],
                 'province' => $wechatUserInfo['province'],
                 'country' => $wechatUserInfo['country'],
