@@ -53,18 +53,15 @@ class WechatScanLogin extends Controller {
         Log::info('获取用户扫码关注的信息：' . json_encode($wechatUserInfo));
 
         //用户是否注册，还是使用 unionid 来判断是否是同一个用户
-//        $userInfo = User::where('unionid',$wechatUserInfo['unionid'])->first();
-        $userInfo = User::where('official_account_openid',$wechatUserInfo['openid'])->first();
-        Log::info('用户信息：' . json_encode($userInfo));
+        $userInfo = User::where('unionid',$wechatUserInfo['unionid'])->first();
 
         // 用户不存在，添加用该用户信息
         if (!$userInfo) {
-            Log::info('来了: ' . $wechatUserInfo['openid']);
             $save = [
                 'official_account_openid' => $wechatUserInfo['openid'],
                 'nickname' => $wechatUserInfo['nickname'],
                 'headimgurl' => $wechatUserInfo['headimgurl'],
-//                'unionid' => $wechatUserInfo['unionid'],
+                'unionid' => $wechatUserInfo['unionid'],
                 'sex' => $wechatUserInfo['sex'],
                 'city' => $wechatUserInfo['city'],
                 'province' => $wechatUserInfo['province'],
@@ -73,23 +70,18 @@ class WechatScanLogin extends Controller {
                 'updated_at' => time()
             ];
 
-            Log::info('插入用户数据：   ' . json_encode($save));
-
             $id = DB::table('users')->insertGetId($save);
-            Log::info('用户id：   ' . $id);
             $userInfo = User::where('id', $id)->first();
         } else {
-            Log::info('到这来了来了');
             // 如果用户已经存在，查看用户是否有公众号的 openid
             if (!$userInfo->official_account_openid) {
                 // 没有公众号的 openid，记录公众号的 openid
-                User::where('official_account_openid',$wechatUserInfo['openid'])->update(['official_account_openid' =>  $wechatUserInfo['openid']]);
+                User::where('unionid',$wechatUserInfo['unionid'])->update(['official_account_openid' =>  $wechatUserInfo['openid']]);
             }
         }
 
         // 将用户信息存入缓存中，使用用户扫码的 Ticket 唯一标识做为 key，用户信息为 value，过期时间为 6 分钟
         Cache::put($message['Ticket'], $userInfo, 6*60);
-        Log::info('用户信息缓存：   ' . json_encode(Cache::get($message['Ticket'])));
     }
 
     /**
