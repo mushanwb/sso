@@ -19,4 +19,5 @@ Route::get('/', function () {
 
 //生成 pc 端登录的二维码
 Route::get('/wechat/loginQrcode','Wechat\WechatScanLogin@makeLoginQrcode');
+//获取登录后的用户信息
 Route::get('/wechat/scanLogin','Wechat\WechatScanLogin@scanLoginUserInfo');
