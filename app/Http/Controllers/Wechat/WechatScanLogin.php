@@ -73,6 +73,8 @@ class WechatScanLogin extends Controller {
                 'updated_at' => time()
             ];
 
+            Log::info('插入用户数据：   ' . json_encode($save));
+
             $id = DB::table('users')->insertGetId($save);
             Log::info('用户id：   ' . $id);
             $userInfo = User::where('id', $id)->first();
