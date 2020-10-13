@@ -59,7 +59,7 @@ class WechatScanLogin extends Controller {
 
         // 用户不存在，添加用该用户信息
         if (!$userInfo) {
-            Log::info('来了');
+            Log::info('来了: ' . $wechatUserInfo['openid']);
             $save = [
                 'official_account_openid' => $wechatUserInfo['openid'],
                 'nickname' => $wechatUserInfo['nickname'],
