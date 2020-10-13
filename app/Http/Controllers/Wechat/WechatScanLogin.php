@@ -9,6 +9,7 @@ use App\User;
 use EasyWeChat\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class WechatScanLogin extends Controller {
@@ -52,8 +53,7 @@ class WechatScanLogin extends Controller {
         Log::info('获取用户扫码关注的信息：' . json_encode($wechatUserInfo));
 
         //用户是否注册，还是使用 unionid 来判断是否是同一个用户
-//        $userInfo = User::where('unionid',$wechatUserInfo['unionid'])->first();
-        $userInfo = User::where('openid',$wechatUserInfo['openid'])->first();
+        $userInfo = User::where('unionid',$wechatUserInfo['unionid'])->first();
 
         // 用户不存在，添加用该用户信息
         if (!$userInfo) {
@@ -61,8 +61,8 @@ class WechatScanLogin extends Controller {
                 'official_account_openid' => $wechatUserInfo['openid'],
                 'nickname' => $wechatUserInfo['nickname'],
                 'headimgurl' => $wechatUserInfo['headimgurl'],
-//                'unionid' => $wechatUserInfo['unionid'],
-                'sex' => $wechatUserInfo['gender'],
+                'unionid' => $wechatUserInfo['unionid'],
+                'sex' => $wechatUserInfo['sex'],
                 'city' => $wechatUserInfo['city'],
                 'province' => $wechatUserInfo['province'],
                 'country' => $wechatUserInfo['country'],
@@ -70,13 +70,13 @@ class WechatScanLogin extends Controller {
                 'updated_at' => time()
             ];
 
-            $id = User::insertGetId($save);
+            $id = DB::table('users')->insertGetId($save);
             $userInfo = User::where('id', $id)->first();
         } else {
             // 如果用户已经存在，查看用户是否有公众号的 openid
             if (!$userInfo->official_account_openid) {
                 // 没有公众号的 openid，记录公众号的 openid
-                User::where('openid',$wechatUserInfo['openid'])->update(['official_account_openid' =>  $wechatUserInfo['openid']]);
+                User::where('unionid',$wechatUserInfo['unionid'])->update(['official_account_openid' =>  $wechatUserInfo['openid']]);
             }
         }
 
