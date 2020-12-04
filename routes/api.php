@@ -33,9 +33,9 @@ Route::post('account/register','Account\AccountLoginController@register');  // �
 
 
 // 测试 JWT
-Route::get('test/generate','Test\TestController@generate'); // jwt 生成
-Route::get('test/verifica','Test\TestController@verifica'); // jwt 验证
+Route::get('test/generate','TestJob\TestController@generate'); // jwt 生成
+Route::get('test/verifica','TestJob\TestController@verifica'); // jwt 验证
 
 Route::Group(['middleware' => ['jwt.login']], function () {
-    Route::get('test/user_info','Test\TestController@userInfoNeedLogin');   // 测试获取用户信息
+    Route::get('test/user_info','TestJob\TestController@userInfoNeedLogin');   // 测试获取用户信息
 });

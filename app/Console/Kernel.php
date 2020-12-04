@@ -25,6 +25,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+            // K+ 会员月底送话费
+            (new Test())->operation();
+        })->everyFiveMinutes();
+
     }
 
     /**
