@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             // K+ 会员月底送话费
             (new Test())->operation();
-        })->everyFiveMinutes();
+        })->everyMinute();
 
     }
 
